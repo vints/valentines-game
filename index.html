@@ -1073,17 +1073,19 @@
           inputGroup.style.opacity = '0';
           inputGroup.style.transition = 'opacity 1s ease';
           
+          // Position the container to match where bubbles ended (top of screen)
           questionContainer.style.cssText = `
             text-align: center;
             max-width: 700px;
-            margin: 0 auto;
-            padding-top: 20px;
+            margin: -180px auto 0;
             display: block;
+            position: relative;
           `;
           
           questionText.textContent = 'Will you be my valentine?';
           questionText.style.opacity = '0';
           questionText.style.transition = 'opacity 2s ease';
+          questionText.style.marginBottom = '40px';
           
           // Fade in the text
           setTimeout(() => {
