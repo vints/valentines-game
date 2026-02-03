@@ -224,12 +224,19 @@
 
     .word-bubbles-pool {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       justify-content: center;
       gap: 15px;
       min-height: 150px;
       margin-bottom: 50px;
       padding: 20px;
+    }
+
+    /* Only wrap on smaller screens */
+    @media (max-width: 900px) {
+      .word-bubbles-pool {
+        flex-wrap: wrap;
+      }
     }
 
     .word-bubble {
@@ -273,11 +280,18 @@
 
     .blanks-container {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       justify-content: center;
       gap: 10px;
       margin-bottom: 30px;
       padding: 20px;
+    }
+
+    /* Only wrap on smaller screens */
+    @media (max-width: 900px) {
+      .blanks-container {
+        flex-wrap: wrap;
+      }
     }
 
     .blank {
