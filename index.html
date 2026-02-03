@@ -235,7 +235,7 @@
     .word-bubble {
       background: var(--red);
       color: var(--white);
-      padding: 10px 25px;
+      padding: 0.4em 1.2em;
       border-radius: 25px;
       font-size: clamp(1.2rem, 2.5vw, 1.8rem);
       font-weight: 700;
@@ -246,8 +246,10 @@
       position: relative;
       line-height: 1.2;
       height: fit-content;
+      max-height: 50px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
     }
 
     .word-bubble:active {
