@@ -1010,8 +1010,14 @@
       if (allFilled && allCorrect) {
         // Immediately fade out instructions
         const instructions = document.querySelector('.unscramble-instructions');
+        instructions.style.animation = 'none'; // Remove the fadeIn animation
         instructions.style.transition = 'opacity 0.5s ease';
         instructions.style.opacity = '0';
+        
+        // Completely remove from layout after fade
+        setTimeout(() => {
+          instructions.style.display = 'none';
+        }, 500);
         
         setTimeout(() => {
           transformToQuestion();
