@@ -235,7 +235,7 @@
     .word-bubble {
       background: var(--red);
       color: var(--white);
-      padding: 8px 25px;
+      padding: 12px 25px;
       border-radius: 25px;
       font-size: clamp(1.2rem, 2.5vw, 1.8rem);
       font-weight: 700;
@@ -244,6 +244,7 @@
       box-shadow: 0 4px 10px rgba(255, 68, 88, 0.3);
       user-select: none;
       position: relative;
+      line-height: 1;
     }
 
     .word-bubble:active {
@@ -1002,6 +1003,11 @@
       });
       
       if (allFilled && allCorrect) {
+        // Immediately fade out instructions
+        const instructions = document.querySelector('.unscramble-instructions');
+        instructions.style.transition = 'opacity 0.5s ease';
+        instructions.style.opacity = '0';
+        
         setTimeout(() => {
           transformToQuestion();
         }, 500);
@@ -1041,10 +1047,8 @@
       blanksContainer.innerHTML = '';
       blanksContainer.appendChild(phraseContainer);
       
-      // Hide instructions at the same time as float starts
+      // Float bubbles up immediately (instructions already faded out)
       setTimeout(() => {
-        instructions.style.transition = 'opacity 0.5s ease';
-        instructions.style.opacity = '0';
         phraseContainer.style.transform = 'translateY(-200px)';
       }, 300);
       
@@ -1055,7 +1059,7 @@
         
         // Start fading in the correct text while bubbles fade out
         setTimeout(() => {
-          // Position the question container at the top where bubbles were
+          // Position the question container at the top where bubbles floated to
           const questionContainer = document.getElementById('final-question-container');
           const questionText = document.getElementById('final-question-text');
           const inputGroup = questionContainer.querySelector('.input-group');
@@ -1068,7 +1072,7 @@
             text-align: center;
             max-width: 700px;
             margin: 0 auto;
-            padding-top: 60px;
+            padding-top: 20px;
             display: block;
           `;
           
