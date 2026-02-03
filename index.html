@@ -399,18 +399,26 @@
       height: 100%;
       opacity: 0;
       animation: fadeInContent 1.5s ease forwards;
+      text-align: center;
     }
 
     @keyframes fadeInContent {
       to { opacity: 1; }
     }
 
+    #victory-content h1 {
+      font-family: 'Pacifico', cursive;
+      color: var(--red);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 40px;
+      line-height: 1.3;
+    }
+
     #victory-svg {
-      width: 100%;
       max-width: 400px;
+      width: 100%;
       height: auto;
       margin: 0 auto;
-      filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.1));
     }
 
     #victory-signature {
@@ -638,83 +646,106 @@
   <div id="victory" class="screen">
     <canvas id="fireworks-canvas"></canvas>
     <div id="victory-content">
-      <svg id="victory-svg" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
-        <!-- Man (Left Figure) -->
-        <g id="victory-man">
+      <h1>Love, Vince</h1>
+      
+      <svg id="victory-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Floating hearts -->
+        <circle cx="100" cy="80" r="15" fill="#FFB6C1" opacity="0.6"/>
+        <circle cx="105" cy="75" r="15" fill="#FFB6C1" opacity="0.6"/>
+        <path d="M 102.5 95 L 102.5 70" fill="#FFB6C1" opacity="0.6"/>
+
+        <circle cx="300" cy="100" r="15" fill="#FFB6C1" opacity="0.6"/>
+        <circle cx="305" cy="95" r="15" fill="#FFB6C1" opacity="0.6"/>
+        <path d="M 302.5 115 L 302.5 90" fill="#FFB6C1" opacity="0.6"/>
+
+        <circle cx="320" cy="180" r="12" fill="#FFB6C1" opacity="0.6"/>
+        <circle cx="325" cy="176" r="12" fill="#FFB6C1" opacity="0.6"/>
+        <path d="M 322.5 195 L 322.5 173" fill="#FFB6C1" opacity="0.6"/>
+
+        <!-- Woman (left) -->
+        <g id="woman-landing">
+          <!-- Long hair strands - covering top of head, visible individual strands, tapering at bottom -->
+          <!-- Left side hair -->
+          <path d="M 176 95 Q 166 100 164 110 L 164 145 Q 163 165 161 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 178 94 Q 168 99 166 109 L 166 145 Q 165 165 163 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 180 93 Q 170 98 168 108 L 168 145 Q 167 165 165 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 182 92 Q 172 97 170 107 L 170 145 Q 169 165 167 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 184 91 Q 174 96 172 106 L 172 145 Q 171 165 169 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          
+          <!-- Top coverage hair strands -->
+          <path d="M 186 90 Q 180 88 176 92" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 186 90 Q 192 88 196 92" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 183 89 Q 186 87 189 89" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          
+          <!-- Right side hair -->
+          <path d="M 188 91 Q 198 96 200 106 L 200 145 Q 201 165 203 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 190 92 Q 200 97 202 107 L 202 145 Q 203 165 205 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 192 93 Q 202 98 204 108 L 204 145 Q 205 165 207 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 194 94 Q 204 99 206 109 L 206 145 Q 207 165 209 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M 196 95 Q 206 100 208 110 L 208 145 Q 209 165 211 180" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          
           <!-- Head -->
-          <circle cx="80" cy="100" r="30" fill="#FFE4C4" stroke="#000" stroke-width="2"/>
-          
-          <!-- Hair -->
-          <path d="M 55 95 Q 55 70 80 65 Q 105 70 105 95" fill="#654321" stroke="#000" stroke-width="2"/>
-          
+          <circle cx="186" cy="110" r="20" fill="none" stroke="#000" stroke-width="3"/>
           <!-- Eyes -->
-          <circle cx="72" cy="98" r="3" fill="#000"/>
-          <circle cx="88" cy="98" r="3" fill="#000"/>
-          
+          <circle cx="180" cy="107" r="3" fill="#000"/>
+          <circle cx="192" cy="107" r="3" fill="#000"/>
           <!-- Smile -->
-          <path d="M 70 108 Q 80 113 90 108" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
-          
+          <path d="M 178 116 Q 186 122 194 116" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
           <!-- Body -->
-          <line x1="80" y1="130" x2="80" y2="220" stroke="#000" stroke-width="3"/>
-          
-          <!-- Arms -->
-          <line x1="80" y1="150" x2="50" y2="180" stroke="#000" stroke-width="3"/>
-          <line x1="80" y1="150" x2="110" y2="180" stroke="#000" stroke-width="3"/>
-          
-          <!-- Legs -->
-          <line x1="80" y1="220" x2="60" y2="280" stroke="#000" stroke-width="3"/>
-          <line x1="80" y1="220" x2="100" y2="280" stroke="#000" stroke-width="3"/>
-          
-          <!-- Shirt color -->
-          <circle cx="80" cy="170" r="15" fill="#4A90E2" opacity="0.6"/>
+          <line x1="186" y1="130" x2="186" y2="180" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="186" y1="150" x2="166" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="186" y1="150" x2="206" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="186" y1="180" x2="170" y2="210" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="186" y1="180" x2="202" y2="210" stroke="#000" stroke-width="3" stroke-linecap="round"/>
         </g>
 
-        <!-- Heart (Center) -->
-        <g id="victory-heart">
-          <path d="M 150 160 
-                   C 150 145, 135 130, 120 130
-                   C 105 130, 95 140, 95 155
-                   C 95 175, 150 210, 150 210
-                   C 150 210, 205 175, 205 155
-                   C 205 140, 195 130, 180 130
-                   C 165 130, 150 145, 150 160 Z" 
-                fill="#FF1744" 
-                stroke="#C41230" 
-                stroke-width="2"/>
-        </g>
+        <!-- Heart between them -->
+        <circle cx="218" cy="150" r="8" fill="#FF4458"/>
+        <circle cx="224" cy="150" r="8" fill="#FF4458"/>
+        <path d="M 211 150 L 221 165 L 231 150" fill="#FF4458"/>
 
-        <!-- Woman (Right Figure) -->
-        <g id="victory-woman">
+        <!-- Man (right) -->
+        <g id="man-landing">
+          <!-- Flatter, fuller spiky hair covering top better -->
+          <!-- Top row - flatter spikes -->
+          <line x1="245" y1="95" x2="243" y2="89" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="248" y1="94" x2="247" y2="88" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="250" y1="93" x2="250" y2="87" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="252" y1="94" x2="253" y2="88" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="255" y1="95" x2="257" y2="89" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          
+          <!-- Fill in top coverage -->
+          <line x1="242" y1="97" x2="240" y2="92" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="246" y1="96" x2="245" y2="91" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="254" y1="96" x2="255" y2="91" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="258" y1="97" x2="260" y2="92" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          
+          <!-- Side spikes - fuller coverage -->
+          <line x1="237" y1="100" x2="234" y2="96" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="239" y1="99" x2="236" y2="95" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="235" y1="102" x2="232" y2="99" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="233" y1="105" x2="230" y2="103" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          
+          <line x1="263" y1="100" x2="266" y2="96" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="261" y1="99" x2="264" y2="95" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="265" y1="102" x2="268" y2="99" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="267" y1="105" x2="270" y2="103" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          
           <!-- Head -->
-          <circle cx="220" cy="100" r="30" fill="#FFE4C4" stroke="#000" stroke-width="2"/>
-          
-          <!-- Hair (longer, flowing) -->
-          <path d="M 195 95 Q 195 65 220 60 Q 245 65 245 95 L 245 110 Q 240 115 220 115 Q 200 115 195 110 Z" 
-                fill="#8B4513" stroke="#000" stroke-width="2"/>
-          
+          <circle cx="250" cy="110" r="20" fill="none" stroke="#000" stroke-width="3"/>
           <!-- Eyes -->
-          <circle cx="212" cy="98" r="3" fill="#000"/>
-          <circle cx="228" cy="98" r="3" fill="#000"/>
-          
+          <circle cx="244" cy="107" r="3" fill="#000"/>
+          <circle cx="256" cy="107" r="3" fill="#000"/>
           <!-- Smile -->
-          <path d="M 210 108 Q 220 113 230 108" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
-          
+          <path d="M 242 116 Q 250 122 258 116" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
           <!-- Body -->
-          <line x1="220" y1="130" x2="220" y2="220" stroke="#000" stroke-width="3"/>
-          
-          <!-- Arms -->
-          <line x1="220" y1="150" x2="190" y2="180" stroke="#000" stroke-width="3"/>
-          <line x1="220" y1="150" x2="250" y2="180" stroke="#000" stroke-width="3"/>
-          
-          <!-- Legs -->
-          <line x1="220" y1="220" x2="200" y2="280" stroke="#000" stroke-width="3"/>
-          <line x1="220" y1="220" x2="240" y2="280" stroke="#000" stroke-width="3"/>
-          
-          <!-- Dress/shirt color -->
-          <circle cx="220" cy="170" r="15" fill="#E91E63" opacity="0.6"/>
+          <line x1="250" y1="130" x2="250" y2="180" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="250" y1="150" x2="230" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="250" y1="150" x2="270" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="250" y1="180" x2="234" y2="210" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="250" y1="180" x2="266" y2="210" stroke="#000" stroke-width="3" stroke-linecap="round"/>
         </g>
       </svg>
-      <div id="victory-signature">Love, Vince</div>
     </div>
   </div>
 
