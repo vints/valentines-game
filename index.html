@@ -302,6 +302,7 @@
       max-width: 700px;
       margin: 0 auto;
       padding-top: 60px;
+      display: none;
     }
 
     .final-question-text {
@@ -1057,24 +1058,32 @@
           // Position the question container at the top where bubbles were
           const questionContainer = document.getElementById('final-question-container');
           const questionText = document.getElementById('final-question-text');
+          const inputGroup = questionContainer.querySelector('.input-group');
+          
+          // Hide input group initially
+          inputGroup.style.opacity = '0';
+          inputGroup.style.transition = 'opacity 1s ease';
           
           questionContainer.style.cssText = `
             text-align: center;
             max-width: 700px;
             margin: 0 auto;
             padding-top: 60px;
+            display: block;
           `;
           
           questionText.textContent = 'Will you be my valentine?';
           questionText.style.opacity = '0';
           questionText.style.transition = 'opacity 2s ease';
           
-          // Show container immediately
-          questionContainer.style.display = 'block';
-          
           // Fade in the text
           setTimeout(() => {
             questionText.style.opacity = '1';
+            
+            // Show input group after text is fully visible
+            setTimeout(() => {
+              inputGroup.style.opacity = '1';
+            }, 2000); // Wait for text to fully fade in
           }, 50);
           
           // Remove phrase container after fade completes
