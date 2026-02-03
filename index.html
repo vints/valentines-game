@@ -765,6 +765,15 @@
       const puzzle = state.puzzles[state.currentPuzzle];
       const errorMessage = document.getElementById('error-message');
 
+      // Check for shortcut on question 1
+      if (state.currentPuzzle === 0 && input.trim().toLowerCase() === 'krabbypatty') {
+        // Skip to unscramble with all answers collected
+        state.collectedAnswers = state.puzzles.map(p => p.answer);
+        state.currentPuzzle = state.puzzles.length;
+        showUnscrambleScreen();
+        return;
+      }
+
       if (validateAnswer(input, puzzle.answer)) {
         errorMessage.classList.remove('show');
         advancePuzzle();
