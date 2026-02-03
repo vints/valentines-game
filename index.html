@@ -374,19 +374,55 @@
 
     /* Victory Screen */
     #victory {
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto;
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #fireworks-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    #victory-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      opacity: 0;
+      animation: fadeInContent 1.5s ease forwards;
+    }
+
+    @keyframes fadeInContent {
+      to { opacity: 1; }
     }
 
     #victory-svg {
       width: 100%;
-      max-width: 500px;
+      max-width: 400px;
       height: auto;
       margin: 0 auto;
+      filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.1));
     }
 
-    /* Victory Animations */
+    #victory-signature {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--red);
+      margin-top: 40px;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Victory Animations - keeping old ones for compatibility but won't be used */
     @keyframes cuddle {
       0% { transform: translateX(0); }
       100% { transform: translateX(-5px); }
@@ -600,112 +636,86 @@
 
   <!-- Victory Screen -->
   <div id="victory" class="screen">
-    <svg id="victory-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-      <!-- Headboard -->
-      <rect x="80" y="80" width="240" height="15" fill="#8B7355" stroke="#000" stroke-width="3" rx="5"/>
-      
-      <!-- Bed (3D perspective - can see top surface) -->
-      <ellipse cx="200" cy="180" rx="130" ry="15" fill="#F5F5DC" stroke="#000" stroke-width="3"/>
-      <rect x="70" y="165" width="260" height="40" fill="#F5F5DC" stroke="#000" stroke-width="3" rx="5"/>
-      
-      <!-- Pillows -->
-      <ellipse cx="160" cy="115" rx="25" ry="12" fill="#FFFFFF" stroke="#000" stroke-width="2"/>
-      <ellipse cx="240" cy="115" rx="25" ry="12" fill="#FFFFFF" stroke="#000" stroke-width="2"/>
-      
-      <!-- TV Stand -->
-      <rect x="175" y="235" width="50" height="8" fill="#654321" stroke="#000" stroke-width="2"/>
-      <rect x="180" y="220" width="40" height="15" fill="#654321" stroke="#000" stroke-width="2"/>
-      
-      <!-- Widescreen TV -->
-      <rect x="140" y="200" width="120" height="70" fill="#1a1a1a" stroke="#000" stroke-width="3" rx="3"/>
-      <rect x="145" y="205" width="110" height="60" fill="#2c5aa0" stroke="#000" stroke-width="2"/>
-      <text x="200" y="240" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#E50914" text-anchor="middle">NETFLIX</text>
-
-      <!-- Woman (left) -->
-      <g id="woman">
-        <!-- Long hair -->
-        <path d="M 125 98 Q 115 96 112 106 L 112 135 L 112 155" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M 127 97 Q 117 95 114 105 L 114 135 L 114 155" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M 129 96 Q 119 94 116 104 L 116 135 L 116 155" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M 131 97 Q 121 95 118 105 L 118 135 L 118 155" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
-        
-        <path d="M 145 98 Q 155 96 158 106 L 158 135 L 158 155" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M 143 97 Q 153 95 156 105 L 156 135 L 156 155" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M 141 96 Q 151 94 154 104 L 154 135 L 154 155" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M 139 97 Q 149 95 152 105 L 152 135 L 152 155" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
-        
-        <!-- Head -->
-        <circle cx="135" cy="112" r="15" fill="none" stroke="#000" stroke-width="3"/>
-        <!-- Eyes -->
-        <g id="woman-eyes">
-          <circle cx="130" cy="110" r="2" fill="#000"/>
-          <circle cx="140" cy="110" r="2" fill="#000"/>
-        </g>
-        <!-- Eyebrows (for angry stage) -->
-        <g id="woman-eyebrows" opacity="0">
-          <line x1="127" y1="105" x2="133" y2="107" stroke="#000" stroke-width="2" stroke-linecap="round"/>
-          <line x1="137" y1="107" x2="143" y2="105" stroke="#000" stroke-width="2" stroke-linecap="round"/>
-        </g>
-        <!-- Mouth -->
-        <g id="woman-mouth">
-          <path d="M 130 117 Q 135 120 140 117" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
-        </g>
-        <!-- Body -->
-        <line x1="135" y1="127" x2="135" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-        <line x1="135" y1="145" x2="155" y2="155" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-        <line x1="135" y1="145" x2="115" y2="155" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-      </g>
-
-      <!-- Anger mark (appears during angry stage) -->
-      <g id="anger-mark" opacity="0">
-        <text x="165" y="110" font-size="24">💢</text>
-      </g>
-
-      <!-- Man (right) -->
-      <g id="man">
-        <!-- Body -->
-        <line x1="235" y1="127" x2="235" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-        <line x1="235" y1="145" x2="215" y2="155" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-        <line x1="235" y1="145" x2="255" y2="155" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-
-        <!-- Head group -->
-        <g id="man-head" style="transform-origin: 235px 112px;">
-          <!-- Shorter spiky hair -->
-          <line x1="235" y1="97" x2="231" y2="90" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="235" y1="97" x2="235" y2="89" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="235" y1="97" x2="239" y2="90" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="231" y1="99" x2="228" y2="93" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="239" y1="99" x2="242" y2="93" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="227" y1="101" x2="224" y2="96" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="243" y1="101" x2="246" y2="96" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="233" y1="98" x2="231" y2="92" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="237" y1="98" x2="239" y2="92" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="229" y1="100" x2="226" y2="95" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          <line x1="241" y1="100" x2="244" y2="95" stroke="#000" stroke-width="3" stroke-linecap="round"/>
-          
+    <canvas id="fireworks-canvas"></canvas>
+    <div id="victory-content">
+      <svg id="victory-svg" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+        <!-- Man (Left Figure) -->
+        <g id="victory-man">
           <!-- Head -->
-          <circle cx="235" cy="112" r="15" fill="none" stroke="#000" stroke-width="3"/>
-          <!-- Open eyes -->
-          <g id="man-eyes">
-            <circle cx="230" cy="110" r="2" fill="#000"/>
-            <circle cx="240" cy="110" r="2" fill="#000"/>
-          </g>
-          <!-- Closed eyes -->
-          <g id="man-eyes-closed" opacity="0">
-            <line x1="227" y1="110" x2="233" y2="110" stroke="#000" stroke-width="2" stroke-linecap="round"/>
-            <line x1="237" y1="110" x2="243" y2="110" stroke="#000" stroke-width="2" stroke-linecap="round"/>
-          </g>
-          <!-- Mouth -->
-          <path d="M 230 117 Q 235 120 240 117" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="80" cy="100" r="30" fill="#FFE4C4" stroke="#000" stroke-width="2"/>
+          
+          <!-- Hair -->
+          <path d="M 55 95 Q 55 70 80 65 Q 105 70 105 95" fill="#654321" stroke="#000" stroke-width="2"/>
+          
+          <!-- Eyes -->
+          <circle cx="72" cy="98" r="3" fill="#000"/>
+          <circle cx="88" cy="98" r="3" fill="#000"/>
+          
+          <!-- Smile -->
+          <path d="M 70 108 Q 80 113 90 108" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          
+          <!-- Body -->
+          <line x1="80" y1="130" x2="80" y2="220" stroke="#000" stroke-width="3"/>
+          
+          <!-- Arms -->
+          <line x1="80" y1="150" x2="50" y2="180" stroke="#000" stroke-width="3"/>
+          <line x1="80" y1="150" x2="110" y2="180" stroke="#000" stroke-width="3"/>
+          
+          <!-- Legs -->
+          <line x1="80" y1="220" x2="60" y2="280" stroke="#000" stroke-width="3"/>
+          <line x1="80" y1="220" x2="100" y2="280" stroke="#000" stroke-width="3"/>
+          
+          <!-- Shirt color -->
+          <circle cx="80" cy="170" r="15" fill="#4A90E2" opacity="0.6"/>
         </g>
-      </g>
 
-      <!-- Heart (appears at end) -->
-      <g id="heart" opacity="0">
-        <path d="M 200 140 Q 190 110 160 110 Q 120 110 120 145 Q 120 175 200 220 Q 280 175 280 145 Q 280 110 240 110 Q 210 110 200 140 Z" fill="#FF4458" stroke="#FFF" stroke-width="4"/>
-        <text id="signature" x="200" y="165" font-family="Pacifico, cursive" font-size="28" fill="#FFF" text-anchor="middle" opacity="0">love, Vince</text>
-      </g>
-    </svg>
+        <!-- Heart (Center) -->
+        <g id="victory-heart">
+          <path d="M 150 160 
+                   C 150 145, 135 130, 120 130
+                   C 105 130, 95 140, 95 155
+                   C 95 175, 150 210, 150 210
+                   C 150 210, 205 175, 205 155
+                   C 205 140, 195 130, 180 130
+                   C 165 130, 150 145, 150 160 Z" 
+                fill="#FF1744" 
+                stroke="#C41230" 
+                stroke-width="2"/>
+        </g>
+
+        <!-- Woman (Right Figure) -->
+        <g id="victory-woman">
+          <!-- Head -->
+          <circle cx="220" cy="100" r="30" fill="#FFE4C4" stroke="#000" stroke-width="2"/>
+          
+          <!-- Hair (longer, flowing) -->
+          <path d="M 195 95 Q 195 65 220 60 Q 245 65 245 95 L 245 110 Q 240 115 220 115 Q 200 115 195 110 Z" 
+                fill="#8B4513" stroke="#000" stroke-width="2"/>
+          
+          <!-- Eyes -->
+          <circle cx="212" cy="98" r="3" fill="#000"/>
+          <circle cx="228" cy="98" r="3" fill="#000"/>
+          
+          <!-- Smile -->
+          <path d="M 210 108 Q 220 113 230 108" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+          
+          <!-- Body -->
+          <line x1="220" y1="130" x2="220" y2="220" stroke="#000" stroke-width="3"/>
+          
+          <!-- Arms -->
+          <line x1="220" y1="150" x2="190" y2="180" stroke="#000" stroke-width="3"/>
+          <line x1="220" y1="150" x2="250" y2="180" stroke="#000" stroke-width="3"/>
+          
+          <!-- Legs -->
+          <line x1="220" y1="220" x2="200" y2="280" stroke="#000" stroke-width="3"/>
+          <line x1="220" y1="220" x2="240" y2="280" stroke="#000" stroke-width="3"/>
+          
+          <!-- Dress/shirt color -->
+          <circle cx="220" cy="170" r="15" fill="#E91E63" opacity="0.6"/>
+        </g>
+      </svg>
+      <div id="victory-signature">Love, Vince</div>
+    </div>
   </div>
 
   <script>
@@ -1149,50 +1159,268 @@
 
     // Play victory animation
     function playVictoryAnimation() {
-      const svg = document.getElementById('victory-svg');
-
-      // Stage 1: Cuddling (0-5s)
-      svg.classList.add('stage-cuddle');
-
-      // Stage 2: Man falls asleep (5-8s)
-      setTimeout(() => {
-        svg.classList.remove('stage-cuddle');
-        svg.classList.add('stage-sleep');
-
-        // Close man's eyes
-        document.getElementById('man-eyes').style.opacity = '0';
-        document.getElementById('man-eyes-closed').style.opacity = '1';
-      }, 5000);
-
-      // Stage 3: Woman gets mad (8-12s)
-      setTimeout(() => {
-        svg.classList.remove('stage-sleep');
-        svg.classList.add('stage-angry');
-
-        // Show anger mark and angry eyebrows
-        document.getElementById('anger-mark').style.opacity = '1';
-        document.getElementById('woman-eyebrows').style.opacity = '1';
-
-        // Change mouth to frown
-        document.getElementById('woman-mouth').innerHTML = '<path d="M 130 120 Q 135 117 140 120" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>';
-      }, 8000);
-
-      // Stage 4: Woman smiles lovingly (12-15s)
-      setTimeout(() => {
-        svg.classList.remove('stage-angry');
-
-        // Remove anger mark and angry eyebrows
-        document.getElementById('anger-mark').style.opacity = '0';
-        document.getElementById('woman-eyebrows').style.opacity = '0';
-
-        // Change to loving smile
-        document.getElementById('woman-mouth').innerHTML = '<path d="M 130 117 Q 135 122 140 117" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>';
-      }, 12000);
-
-      // Stage 5: Heart appears (15-18s)
-      setTimeout(() => {
-        svg.classList.add('stage-heart');
-      }, 15000);
+      const canvas = document.getElementById('fireworks-canvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Set canvas size
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      
+      // Firework colors - red, pink, purple (bright and vibrant)
+      const colors = [
+        '#FF1744', // bright red
+        '#F50057', // bright pink
+        '#D500F9', // bright purple
+        '#FF4081', // lighter pink
+        '#E040FB', // lighter purple
+        '#FF5252'  // lighter red
+      ];
+      
+      // Firework class
+      class Firework {
+        constructor() {
+          this.reset();
+        }
+        
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = canvas.height;
+          this.targetY = Math.random() * canvas.height * 0.4 + canvas.height * 0.1;
+          this.speed = Math.random() * 3 + 4;
+          this.size = Math.random() * 2 + 1;
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.exploded = false;
+          this.particles = [];
+          this.type = Math.floor(Math.random() * 3); // 0: burst, 1: sparkle, 2: expanding circle
+        }
+        
+        update() {
+          if (!this.exploded) {
+            this.y -= this.speed;
+            if (this.y <= this.targetY) {
+              this.explode();
+            }
+          } else {
+            this.particles.forEach((particle, index) => {
+              particle.update();
+              if (particle.opacity <= 0) {
+                this.particles.splice(index, 1);
+              }
+            });
+            
+            if (this.particles.length === 0) {
+              this.reset();
+            }
+          }
+        }
+        
+        explode() {
+          this.exploded = true;
+          const particleCount = Math.random() * 30 + 50;
+          
+          for (let i = 0; i < particleCount; i++) {
+            if (this.type === 0) {
+              // Classic circular burst
+              this.particles.push(new BurstParticle(this.x, this.y, this.color));
+            } else if (this.type === 1) {
+              // Sparkle particles
+              this.particles.push(new SparkleParticle(this.x, this.y, this.color));
+            } else {
+              // Expanding circle
+              this.particles.push(new CircleParticle(this.x, this.y, this.color, i, particleCount));
+            }
+          }
+        }
+        
+        draw() {
+          if (!this.exploded) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            
+            // Trail effect
+            ctx.beginPath();
+            ctx.arc(this.x, this.y + 10, this.size * 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = 0.5;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+          } else {
+            this.particles.forEach(particle => particle.draw());
+          }
+        }
+      }
+      
+      // Burst Particle (radiating outward)
+      class BurstParticle {
+        constructor(x, y, color) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 3 + 2;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed;
+          this.gravity = 0.05;
+          this.friction = 0.98;
+          this.opacity = 1;
+          this.size = Math.random() * 3 + 2;
+        }
+        
+        update() {
+          this.vx *= this.friction;
+          this.vy *= this.friction;
+          this.vy += this.gravity;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.opacity -= 0.015;
+        }
+        
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.opacity;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+      
+      // Sparkle Particle (twinkling stars)
+      class SparkleParticle {
+        constructor(x, y, color) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 2 + 1;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed;
+          this.gravity = 0.03;
+          this.friction = 0.99;
+          this.opacity = 1;
+          this.size = Math.random() * 2 + 1;
+          this.twinkle = Math.random() * Math.PI * 2;
+        }
+        
+        update() {
+          this.vx *= this.friction;
+          this.vy *= this.friction;
+          this.vy += this.gravity;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.opacity -= 0.01;
+          this.twinkle += 0.2;
+        }
+        
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.opacity * (Math.sin(this.twinkle) * 0.5 + 0.5);
+          ctx.beginPath();
+          
+          // Draw star shape
+          const spikes = 4;
+          const outerRadius = this.size * 2;
+          const innerRadius = this.size;
+          
+          for (let i = 0; i < spikes * 2; i++) {
+            const radius = i % 2 === 0 ? outerRadius : innerRadius;
+            const angle = (i * Math.PI) / spikes;
+            const px = this.x + Math.cos(angle) * radius;
+            const py = this.y + Math.sin(angle) * radius;
+            
+            if (i === 0) {
+              ctx.moveTo(px, py);
+            } else {
+              ctx.lineTo(px, py);
+            }
+          }
+          
+          ctx.closePath();
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+      
+      // Circle Particle (expanding ring)
+      class CircleParticle {
+        constructor(x, y, color, index, total) {
+          this.centerX = x;
+          this.centerY = y;
+          this.color = color;
+          this.angle = (index / total) * Math.PI * 2;
+          this.radius = 0;
+          this.maxRadius = Math.random() * 100 + 80;
+          this.speed = Math.random() * 2 + 3;
+          this.opacity = 1;
+          this.size = Math.random() * 2 + 1;
+        }
+        
+        update() {
+          this.radius += this.speed;
+          if (this.radius > this.maxRadius * 0.6) {
+            this.opacity -= 0.02;
+          }
+        }
+        
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.opacity;
+          const x = this.centerX + Math.cos(this.angle) * this.radius;
+          const y = this.centerY + Math.sin(this.angle) * this.radius;
+          ctx.beginPath();
+          ctx.arc(x, y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+      
+      // Create fireworks array
+      const fireworks = [];
+      const fireworkCount = 8; // Base number of simultaneous fireworks
+      
+      for (let i = 0; i < fireworkCount; i++) {
+        fireworks.push(new Firework());
+        // Stagger initial launches
+        fireworks[i].y = canvas.height + i * 100;
+      }
+      
+      // Random launch timing
+      let lastLaunchTime = 0;
+      const launchInterval = 300; // Launch new firework every 300ms on average
+      
+      // Animation loop
+      function animate() {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Random launches
+        const now = Date.now();
+        if (now - lastLaunchTime > launchInterval && Math.random() < 0.3) {
+          const inactiveFw = fireworks.find(fw => fw.y >= canvas.height);
+          if (inactiveFw) {
+            inactiveFw.reset();
+            lastLaunchTime = now;
+          }
+        }
+        
+        fireworks.forEach(firework => {
+          firework.update();
+          firework.draw();
+        });
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
     }
 
     // Start the game on page load
