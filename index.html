@@ -235,7 +235,7 @@
     .word-bubble {
       background: var(--red);
       color: var(--white);
-      padding: 12px 25px;
+      padding: 8px 25px;
       border-radius: 25px;
       font-size: clamp(1.2rem, 2.5vw, 1.8rem);
       font-weight: 700;
@@ -262,7 +262,7 @@
     }
 
     .word-bubble.correct {
-      color: #4CAF50;
+      color: #00FF00;
     }
 
     .blanks-container {
@@ -818,6 +818,7 @@
           bubble.textContent = answer;
           bubble.draggable = true;
           bubble.dataset.word = answer;
+          bubble.dataset.bubbleId = `bubble-${index}`; // Unique ID for each bubble
           bubble.dataset.originalIndex = index;
           
           // Add random positioning
@@ -842,7 +843,8 @@
     // Setup drag handlers for word bubbles
     function setupDragHandlers(bubble) {
       bubble.addEventListener('dragstart', (e) => {
-        if (state.unscrambleState.locked.has(bubble.dataset.word)) {
+        // Check if this specific bubble is locked, not just the word
+        if (bubble.classList.contains('locked')) {
           e.preventDefault();
           return;
         }
@@ -877,6 +879,7 @@
         
         const position = parseInt(blank.dataset.position);
         const word = draggedElement.dataset.word;
+        const bubbleId = draggedElement.dataset.bubbleId;
         
         // If blank already has a word, swap or move back to pool
         const existingBubble = blank.querySelector('.word-bubble');
@@ -887,25 +890,28 @@
           } else {
             draggedFrom.appendChild(existingBubble);
           }
+          // Remove the existing bubble's placement record
+          const existingBubbleId = existingBubble.dataset.bubbleId;
           delete state.unscrambleState.placed[blank.dataset.position];
         }
         
-        // Place dragged element in blank
+        // If dragging from another blank, clear that blank's state
         if (draggedFrom !== 'pool' && draggedFrom !== blank) {
           delete state.unscrambleState.placed[draggedFrom.dataset.position];
+          draggedFrom.classList.remove('filled'); // Revert to dashed border
         }
         
         blank.appendChild(draggedElement);
         blank.classList.add('filled');
-        state.unscrambleState.placed[position] = word;
+        state.unscrambleState.placed[position] = bubbleId;
         
         // Check if correct position
         if (state.correctOrder[position] === word) {
           draggedElement.classList.add('correct');
-          state.unscrambleState.locked.add(word);
-          draggedElement.classList.add('locked');
+          draggedElement.classList.add('locked'); // Lock this specific bubble
         } else {
           draggedElement.classList.remove('correct');
+          draggedElement.classList.remove('locked');
         }
         
         draggedElement = null;
@@ -928,12 +934,14 @@
       
       // Remove from blank if it was in one
       if (draggedFrom !== 'pool') {
+        const bubbleId = draggedElement.dataset.bubbleId;
         delete state.unscrambleState.placed[draggedFrom.dataset.position];
-        draggedFrom.classList.remove('filled');
+        draggedFrom.classList.remove('filled'); // Revert to dashed border
       }
       
       pool.appendChild(draggedElement);
       draggedElement.classList.remove('correct');
+      draggedElement.classList.remove('locked');
       
       draggedElement = null;
       draggedFrom = null;
