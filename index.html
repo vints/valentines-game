@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A Valentine's Day scavenger hunt game for Patty">
+  <title>Valentine's Day Game for Patty</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --white: #FFFFFF;
+      --red: #FF4458;
+      --lavender: #E6D5F5;
+      --red-dark: #D63447;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Caveat', cursive;
+      background: linear-gradient(135deg, var(--white) 0%, var(--lavender) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* Landing Screen */
+    #landing {
+      text-align: center;
+    }
+
+    #landing h1 {
+      font-family: 'Pacifico', cursive;
+      color: var(--red);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 40px;
+      line-height: 1.3;
+    }
+
+    #landing-svg {
+      max-width: 400px;
+      width: 100%;
+      height: auto;
+      margin: 0 auto 30px;
+    }
+
+    #landing p {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .btn {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      padding: 15px 50px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 68, 88, 0.3);
+    }
+
+    .btn:hover {
+      background: var(--red-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 68, 88, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* Puzzle Screen */
+    #puzzle {
+      padding-bottom: 100px;
+    }
+
+    .puzzle-card {
+      background: var(--white);
+      border: 3px solid var(--lavender);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 0 auto;
+      max-width: 700px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .riddle-text {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      text-align: center;
+    }
+
+    #answer-input {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      padding: 15px 20px;
+      border: 2px solid var(--lavender);
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
+
+    #answer-input:focus {
+      outline: none;
+      border-color: var(--red);
+    }
+
+    .error-message {
+      color: var(--red);
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
+      margin-bottom: 15px;
+      min-height: 30px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .error-message.show {
+      opacity: 1;
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    /* Accumulated Answers Bar */
+    .answers-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 3px solid var(--lavender);
+      padding: 15px 20px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .answers-bar::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .answers-bar::-webkit-scrollbar-track {
+      background: var(--lavender);
+    }
+
+    .answers-bar::-webkit-scrollbar-thumb {
+      background: var(--red);
+      border-radius: 4px;
+    }
+
+    .answer-badge {
+      background: var(--red);
+      color: var(--white);
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 700;
+      white-space: nowrap;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+    }
+
+    /* Victory Screen */
+    #victory {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #victory-svg {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    /* Victory Animations */
+    @keyframes cuddle {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-5px); }
+    }
+
+    @keyframes sleep {
+      0% { transform: rotate(0deg) translateY(0); }
+      100% { transform: rotate(-10deg) translateY(3px); }
+    }
+
+    @keyframes angry-shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      50% { transform: translateX(3px); }
+      75% { transform: translateX(-3px); }
+    }
+
+    @keyframes heart-grow {
+      0% {
+        opacity: 0;
+        transform: scale(0);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .stage-cuddle #woman {
+      animation: cuddle 5s ease-in-out forwards;
+    }
+
+    .stage-sleep #man-head {
+      animation: sleep 3s ease-out forwards;
+    }
+
+    .stage-angry #woman {
+      animation: angry-shake 0.3s ease-in-out infinite;
+    }
+
+    .stage-heart #heart,
+    .stage-heart #signature {
+      animation: heart-grow 3s ease-out forwards;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .puzzle-card {
+        padding: 30px 20px;
+      }
+
+      .btn {
+        padding: 12px 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #landing h1 {
+        margin-bottom: 30px;
+      }
+
+      #landing-svg {
+        max-width: 300px;
+      }
+
+      .puzzle-card {
+        padding: 25px 15px;
+      }
+
+      .btn {
+        min-height: 44px;
+        padding: 10px 35px;
+      }
+
+      #answer-input {
+        font-size: 16px;
+        min-height: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Landing Screen -->
+  <div id="landing" class="screen active">
+    <h1>A Valentine's Day game for Patty</h1>
+
+    <svg id="landing-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Hearts floating around -->
+      <path d="M 80 60 Q 75 50 65 50 Q 50 50 50 65 Q 50 75 80 95 Q 110 75 110 65 Q 110 50 95 50 Q 85 50 80 60 Z" fill="#FF4458" opacity="0.6"/>
+      <path d="M 320 80 Q 315 70 305 70 Q 290 70 290 85 Q 290 95 320 115 Q 350 95 350 85 Q 350 70 335 70 Q 325 70 320 80 Z" fill="#FF4458" opacity="0.6"/>
+      <path d="M 350 200 Q 345 190 335 190 Q 320 190 320 205 Q 320 215 350 235 Q 380 215 380 205 Q 380 190 365 190 Q 355 190 350 200 Z" fill="#FF4458" opacity="0.6"/>
+
+      <!-- Woman (left) with long hair -->
+      <g id="woman-landing">
+        <!-- Long hair -->
+        <path d="M 140 120 Q 130 115 125 125 L 125 150" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Head -->
+        <circle cx="145" cy="125" r="15" fill="none" stroke="#000" stroke-width="3"/>
+        <!-- Eyes -->
+        <circle cx="140" cy="123" r="2" fill="#000"/>
+        <circle cx="150" cy="123" r="2" fill="#000"/>
+        <!-- Smile -->
+        <path d="M 140 130 Q 145 133 150 130" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Body -->
+        <line x1="145" y1="140" x2="145" y2="180" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <!-- Arms -->
+        <line x1="145" y1="155" x2="165" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="145" y1="155" x2="125" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <!-- Legs -->
+        <line x1="145" y1="180" x2="135" y2="210" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="145" y1="180" x2="155" y2="210" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- Man (right) with spiky hair -->
+      <g id="man-landing">
+        <!-- Spiky hair -->
+        <line x1="255" y1="110" x2="250" y2="100" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="255" y1="110" x2="255" y2="98" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="255" y1="110" x2="260" y2="100" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="248" y1="113" x2="245" y2="105" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="262" y1="113" x2="265" y2="105" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <!-- Head -->
+        <circle cx="255" cy="125" r="15" fill="none" stroke="#000" stroke-width="3"/>
+        <!-- Eyes -->
+        <circle cx="250" cy="123" r="2" fill="#000"/>
+        <circle cx="260" cy="123" r="2" fill="#000"/>
+        <!-- Smile -->
+        <path d="M 250 130 Q 255 133 260 130" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Body -->
+        <line x1="255" y1="140" x2="255" y2="180" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <!-- Arms -->
+        <line x1="255" y1="155" x2="235" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="255" y1="155" x2="275" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <!-- Legs -->
+        <line x1="255" y1="180" x2="245" y2="210" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="255" y1="180" x2="265" y2="210" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- Small heart between them -->
+      <path d="M 200 160 Q 197 155 192 155 Q 185 155 185 163 Q 185 169 200 180 Q 215 169 215 163 Q 215 155 208 155 Q 203 155 200 160 Z" fill="#FF4458"/>
+    </svg>
+
+    <p>Solve the puzzles to win!</p>
+
+    <button id="start-btn" class="btn">Start</button>
+  </div>
+
+  <!-- Puzzle Screen -->
+  <div id="puzzle" class="screen">
+    <div class="puzzle-card">
+      <div class="riddle-text" id="riddle-text"></div>
+      <div class="input-group">
+        <div class="error-message" id="error-message">Not quite! Try again</div>
+        <input type="text" id="answer-input" placeholder="Your answer..." autocomplete="off">
+        <br>
+        <button id="submit-btn" class="btn">Submit</button>
+      </div>
+    </div>
+
+    <div class="answers-bar" id="answers-bar"></div>
+  </div>
+
+  <!-- Victory Screen -->
+  <div id="victory" class="screen">
+    <svg id="victory-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Woman (left) in bed -->
+      <g id="woman">
+        <!-- Long hair -->
+        <path d="M 130 120 Q 120 115 115 125 L 115 150" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Head -->
+        <circle cx="135" cy="125" r="15" fill="none" stroke="#000" stroke-width="3"/>
+        <!-- Eyes (will change) -->
+        <g id="woman-eyes">
+          <circle cx="130" cy="123" r="2" fill="#000"/>
+          <circle cx="140" cy="123" r="2" fill="#000"/>
+        </g>
+        <!-- Eyebrows (for angry stage) -->
+        <g id="woman-eyebrows" opacity="0">
+          <line x1="127" y1="118" x2="133" y2="120" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+          <line x1="137" y1="120" x2="143" y2="118" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+        </g>
+        <!-- Mouth (will change) -->
+        <g id="woman-mouth">
+          <path d="M 130 130 Q 135 133 140 130" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- Body -->
+        <line x1="135" y1="140" x2="135" y2="180" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="135" y1="155" x2="155" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="135" y1="155" x2="115" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- Man (right) in bed -->
+      <g id="man">
+        <g id="man-head">
+          <!-- Spiky hair -->
+          <line x1="265" y1="110" x2="260" y2="100" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="265" y1="110" x2="265" y2="98" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="265" y1="110" x2="270" y2="100" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="258" y1="113" x2="255" y2="105" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <line x1="272" y1="113" x2="275" y2="105" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+          <!-- Head -->
+          <circle cx="265" cy="125" r="15" fill="none" stroke="#000" stroke-width="3"/>
+          <!-- Eyes (will close) -->
+          <g id="man-eyes">
+            <circle cx="260" cy="123" r="2" fill="#000"/>
+            <circle cx="270" cy="123" r="2" fill="#000"/>
+          </g>
+          <!-- Closed eyes (for sleep) -->
+          <g id="man-eyes-closed" opacity="0">
+            <line x1="257" y1="123" x2="263" y2="123" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+            <line x1="267" y1="123" x2="273" y2="123" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+          </g>
+          <!-- Mouth -->
+          <path d="M 260 130 Q 265 133 270 130" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- Body -->
+        <line x1="265" y1="140" x2="265" y2="180" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="265" y1="155" x2="245" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+        <line x1="265" y1="155" x2="285" y2="165" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- Heart (appears at end) -->
+      <g id="heart" opacity="0">
+        <path d="M 200 140 Q 190 110 160 110 Q 120 110 120 145 Q 120 175 200 220 Q 280 175 280 145 Q 280 110 240 110 Q 210 110 200 140 Z" fill="#FF4458" stroke="#FFF" stroke-width="4"/>
+        <text id="signature" x="200" y="165" font-family="Pacifico, cursive" font-size="28" fill="#FFF" text-anchor="middle" opacity="0">love, Vince</text>
+      </g>
+    </svg>
+  </div>
+
+  <script>
+    // Game state
+    const state = {
+      currentScreen: 'landing',
+      currentPuzzle: 0,
+      collectedAnswers: [],
+      puzzles: [
+        {
+          riddle: "I don't play games, I run them. I'm the 5th generation in my family. Find me to start your quest.",
+          answer: "Tie"
+        },
+        {
+          riddle: "Susan's been slacking off. She just sits there doing nothing, spinning in her own thoughts.",
+          answer: "U"
+        },
+        {
+          riddle: "E or…",
+          answer: "N"
+        },
+        {
+          riddle: "The first step on the stairway to heaven (or the last step on the stairway to hell).",
+          answer: "Eye"
+        },
+        {
+          riddle: "A woman in white, she's standing on height. A man below, she seems to know. To say hello, he'll need to climb. But he won't and he can't, 'cause they're frozen in time.",
+          answer: "N"
+        },
+        {
+          riddle: "My favorite photo of you.",
+          answer: "Bee"
+        },
+        {
+          riddle: "Look through your contacts.",
+          answer: "M"
+        },
+        {
+          riddle: "Mirror mirror on a door, inside you'll find what you're looking for.",
+          answer: "Will"
+        },
+        {
+          riddle: "Your partner's initials (full legal name)",
+          answer: "VAL"
+        },
+        {
+          riddle: "Your final answer?",
+          answer: "yes"
+        }
+      ]
+    };
+
+    // Initialize game
+    function initGame() {
+      document.getElementById('start-btn').addEventListener('click', startGame);
+      document.getElementById('submit-btn').addEventListener('click', submitAnswer);
+      document.getElementById('answer-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          submitAnswer();
+        }
+      });
+    }
+
+    // Show screen
+    function showScreen(screenName) {
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+      });
+      document.getElementById(screenName).classList.add('active');
+      state.currentScreen = screenName;
+    }
+
+    // Start game
+    function startGame() {
+      showScreen('puzzle');
+      loadPuzzle(0);
+    }
+
+    // Load puzzle
+    function loadPuzzle(puzzleIndex) {
+      const puzzle = state.puzzles[puzzleIndex];
+      document.getElementById('riddle-text').textContent = puzzle.riddle;
+      document.getElementById('answer-input').value = '';
+      document.getElementById('error-message').classList.remove('show');
+      displayAccumulatedAnswers();
+    }
+
+    // Validate answer
+    function validateAnswer(input, correctAnswer) {
+      return input.trim().toLowerCase() === correctAnswer.toLowerCase();
+    }
+
+    // Submit answer
+    function submitAnswer() {
+      const input = document.getElementById('answer-input').value;
+      const puzzle = state.puzzles[state.currentPuzzle];
+      const errorMessage = document.getElementById('error-message');
+
+      if (validateAnswer(input, puzzle.answer)) {
+        // Correct answer
+        errorMessage.classList.remove('show');
+        advancePuzzle();
+      } else {
+        // Wrong answer
+        errorMessage.classList.add('show');
+        setTimeout(() => {
+          errorMessage.classList.remove('show');
+        }, 2000);
+      }
+    }
+
+    // Advance to next puzzle
+    function advancePuzzle() {
+      const currentAnswer = state.puzzles[state.currentPuzzle].answer;
+      state.collectedAnswers.push(currentAnswer);
+      state.currentPuzzle++;
+
+      if (state.currentPuzzle < state.puzzles.length) {
+        loadPuzzle(state.currentPuzzle);
+      } else {
+        showVictory();
+      }
+    }
+
+    // Display accumulated answers
+    function displayAccumulatedAnswers() {
+      const answersBar = document.getElementById('answers-bar');
+      answersBar.innerHTML = '';
+
+      state.collectedAnswers.forEach(answer => {
+        const badge = document.createElement('div');
+        badge.className = 'answer-badge';
+        badge.textContent = answer;
+        answersBar.appendChild(badge);
+      });
+    }
+
+    // Show victory screen
+    function showVictory() {
+      showScreen('victory');
+      playVictoryAnimation();
+    }
+
+    // Play victory animation
+    function playVictoryAnimation() {
+      const svg = document.getElementById('victory-svg');
+
+      // Stage 1: Cuddling (0-5s)
+      svg.classList.add('stage-cuddle');
+
+      // Stage 2: Man falls asleep (5-8s)
+      setTimeout(() => {
+        svg.classList.remove('stage-cuddle');
+        svg.classList.add('stage-sleep');
+
+        // Close man's eyes
+        document.getElementById('man-eyes').style.opacity = '0';
+        document.getElementById('man-eyes-closed').style.opacity = '1';
+      }, 5000);
+
+      // Stage 3: Woman gets mad (8-12s)
+      setTimeout(() => {
+        svg.classList.remove('stage-sleep');
+        svg.classList.add('stage-angry');
+
+        // Show angry eyebrows
+        document.getElementById('woman-eyebrows').style.opacity = '1';
+
+        // Change mouth to frown
+        document.getElementById('woman-mouth').innerHTML = '<path d="M 130 133 Q 135 130 140 133" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>';
+      }, 8000);
+
+      // Stage 4: Woman smiles lovingly (12-15s)
+      setTimeout(() => {
+        svg.classList.remove('stage-angry');
+
+        // Remove angry eyebrows
+        document.getElementById('woman-eyebrows').style.opacity = '0';
+
+        // Change to loving smile
+        document.getElementById('woman-mouth').innerHTML = '<path d="M 130 130 Q 135 135 140 130" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>';
+      }, 12000);
+
+      // Stage 5: Heart appears (15-18s)
+      setTimeout(() => {
+        svg.classList.add('stage-heart');
+      }, 15000);
+    }
+
+    // Start the game on page load
+    initGame();
+  </script>
+</body>
+</html>
