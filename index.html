@@ -301,18 +301,14 @@
       text-align: center;
       max-width: 700px;
       margin: 0 auto;
-      opacity: 0;
-    }
-
-    .final-question-container.show {
-      animation: fadeIn 0.8s ease forwards;
+      padding-top: 60px;
     }
 
     .final-question-text {
       font-family: 'Pacifico', cursive;
       font-size: clamp(2rem, 4vw, 3rem);
       color: var(--red);
-      margin-bottom: 40px;
+      margin-bottom: 60px;
       min-height: 80px;
     }
 
@@ -1017,9 +1013,6 @@
       const pool = document.getElementById('word-bubbles-pool');
       const instructions = document.querySelector('.unscramble-instructions');
       
-      // Hide instructions
-      instructions.style.opacity = '0';
-      
       // Collect all bubbles from blanks into a single phrase container
       const blanks = document.querySelectorAll('.blank');
       const phraseContainer = document.createElement('div');
@@ -1043,37 +1036,53 @@
         }
       });
       
-      // Clear blanks
+      // Clear blanks and add phrase container
       blanksContainer.innerHTML = '';
       blanksContainer.appendChild(phraseContainer);
       
-      // Float phrase container to top (where pool was)
+      // Hide instructions at the same time as float starts
       setTimeout(() => {
+        instructions.style.transition = 'opacity 0.5s ease';
+        instructions.style.opacity = '0';
         phraseContainer.style.transform = 'translateY(-200px)';
       }, 300);
       
-      // After floating, transform the phrase text
+      // After floating, fade out bubbles and fade in correct text
       setTimeout(() => {
-        // Fade out the bubbles
+        phraseContainer.style.transition = 'opacity 2s ease';
         phraseContainer.style.opacity = '0';
         
+        // Start fading in the correct text while bubbles fade out
         setTimeout(() => {
-          // Create the final question text
+          // Position the question container at the top where bubbles were
           const questionContainer = document.getElementById('final-question-container');
           const questionText = document.getElementById('final-question-text');
           
-          // Remove phrase container
-          blanksContainer.innerHTML = '';
+          questionContainer.style.cssText = `
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            padding-top: 60px;
+          `;
           
-          // Position question at the top
-          blanksContainer.style.opacity = '1';
           questionText.textContent = 'Will you be my valentine?';
+          questionText.style.opacity = '0';
+          questionText.style.transition = 'opacity 2s ease';
           
-          // Show the final question
+          // Show container immediately
           questionContainer.style.display = 'block';
-          questionContainer.classList.add('show');
-        }, 2000); // 2 second fade
-      }, 1300); // Wait for float animation
+          
+          // Fade in the text
+          setTimeout(() => {
+            questionText.style.opacity = '1';
+          }, 50);
+          
+          // Remove phrase container after fade completes
+          setTimeout(() => {
+            blanksContainer.innerHTML = '';
+          }, 2000);
+        }, 100);
+      }, 1300);
     }
 
     // Submit final answer
