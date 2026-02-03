@@ -313,12 +313,46 @@
       font-size: clamp(2rem, 4vw, 3rem);
       color: var(--red);
       margin-bottom: 40px;
+      min-height: 80px;
     }
 
     .final-instruction {
       font-size: clamp(1.5rem, 3vw, 2rem);
       color: #333;
       margin-bottom: 30px;
+      display: none;
+    }
+
+    #final-answer-input {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      padding: 15px 20px;
+      border: 2px solid var(--lavender);
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
+
+    #final-answer-input:focus {
+      outline: none;
+      border-color: var(--red);
+    }
+
+    #final-error-message {
+      color: var(--red);
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
+      margin-bottom: 15px;
+      min-height: 30px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #final-error-message.show {
+      opacity: 1;
+      animation: shake 0.5s ease;
     }
 
     /* Victory Screen */
@@ -538,7 +572,6 @@
     
     <div id="final-question-container" class="final-question-container">
       <div class="final-question-text" id="final-question-text"></div>
-      <div class="final-instruction">So, what do you say?</div>
       <div class="input-group">
         <div id="final-error-message" class="error-message">Not quite! Try again</div>
         <input type="text" id="final-answer-input" placeholder="Your answer...">
@@ -987,33 +1020,60 @@
       // Hide instructions
       instructions.style.opacity = '0';
       
-      // Collect all bubbles from blanks
+      // Collect all bubbles from blanks into a single phrase container
       const blanks = document.querySelectorAll('.blank');
-      const phrase = Array.from(blanks).map(blank => {
+      const phraseContainer = document.createElement('div');
+      phraseContainer.style.cssText = `
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        transition: all 1s ease;
+        margin-bottom: 30px;
+      `;
+      
+      // Move bubbles from blanks to phrase container
+      blanks.forEach(blank => {
         const bubble = blank.querySelector('.word-bubble');
-        return bubble ? bubble.textContent : '';
-      }).join(' ');
+        if (bubble) {
+          const clonedBubble = bubble.cloneNode(true);
+          clonedBubble.draggable = false;
+          phraseContainer.appendChild(clonedBubble);
+        }
+      });
       
-      // Fade out pool and blanks
-      pool.style.transition = 'opacity 0.5s ease';
-      blanksContainer.style.transition = 'opacity 0.5s ease';
-      pool.style.opacity = '0';
-      blanksContainer.style.opacity = '0';
+      // Clear blanks
+      blanksContainer.innerHTML = '';
+      blanksContainer.appendChild(phraseContainer);
       
+      // Float phrase container to top (where pool was)
       setTimeout(() => {
-        // Clear pool and blanks
-        pool.innerHTML = '';
-        blanksContainer.innerHTML = '';
+        phraseContainer.style.transform = 'translateY(-200px)';
+      }, 300);
+      
+      // After floating, transform the phrase text
+      setTimeout(() => {
+        // Fade out the bubbles
+        phraseContainer.style.opacity = '0';
         
-        // Create the transformed question
-        const questionContainer = document.getElementById('final-question-container');
-        const questionText = document.getElementById('final-question-text');
-        questionText.textContent = 'Will you be my valentine?';
-        
-        // Show the final question
-        questionContainer.style.display = 'block';
-        questionContainer.classList.add('show');
-      }, 500);
+        setTimeout(() => {
+          // Create the final question text
+          const questionContainer = document.getElementById('final-question-container');
+          const questionText = document.getElementById('final-question-text');
+          
+          // Remove phrase container
+          blanksContainer.innerHTML = '';
+          
+          // Position question at the top
+          blanksContainer.style.opacity = '1';
+          questionText.textContent = 'Will you be my valentine?';
+          
+          // Show the final question
+          questionContainer.style.display = 'block';
+          questionContainer.classList.add('show');
+        }, 2000); // 2 second fade
+      }, 1300); // Wait for float animation
     }
 
     // Submit final answer
